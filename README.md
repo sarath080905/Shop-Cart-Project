@@ -1,2 +1,14 @@
-# Shop-Cart-Project
-"A Django-based Shop Cart application with SQL database integration, featuring product listing, user authentication, cart management, and order processing. Scalable and customizable for building full e-commerce platforms."
+
+# Shop-Cart Project 🛒
+
+This is a Django-based Shop Cart project with SQL database integration.  
+Features include:
+- User authentication and registration
+- Product listing and categories
+- Add to cart and checkout functionality
+- SQL database for data management
+
+## Tech Stack
+- **Backend:** Django
+- **Database:** SQL Server
+- **Frontend:** HTML, CSS, Bootstrap
