@@ -1,0 +1,79 @@
+{% extends 'shop/layout/main.html' %}
+
+{% block title %}
+Shop | Collections
+{% endblock title %}
+
+{% block content %}
+
+<style>
+    /* Styling same as before … */
+</style>
+
+<!-- =====================
+     HERO SECTION
+====================== -->
+<section class="hero-section text-center container">
+    <div class="row py-lg-5">
+        <div class="col-lg-6 col-md-8 mx-auto">
+            <h1>Bestsellers</h1>
+            <p class="lead">
+                Our most popular products based on sales. Updated hourly.
+            </p>
+            <p>
+                <a href="{% url 'login' %}" class="btn btn-primary my-2">Already User</a>
+                <a href="{% url 'register' %}" class="btn btn-secondary my-2">Register</a>
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- =====================
+     CATEGORY LISTING
+====================== -->
+<section class="category-section bg-light my-5">
+    <div class="container">
+
+        <!-- Section Title -->
+        <div class="row">
+            <div class="col-12">
+                <h4>Categories</h4>
+                <hr style="border-color: #b8bfc2;">
+            </div>
+            <div id="messages">
+                {% include 'shop/inc-include/message.html' %}
+            </div>
+        </div>
+
+        <!-- Category Cards -->
+        <div class="row">
+            {% for item in categories %}
+            <div class="col-md-4 col-lg-3 d-flex">
+                <div class="card product-card my-3 shadow-sm border-0 w-100">
+                    <!-- Category Image -->
+                    <img src="{{ item.image.url }}" class="card-img-top" alt="Categories">
+                    <a href="{% url 'collection_view' item.name %}" class="stretched-link text-decoration-none"></a>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ item.name }}</h5>
+                        <p class="card-text">{{ item.description }}</p>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-center">No categories available.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<script>
+    setTimeout(function () {
+        let alerts = document.querySelectorAll('#messages .alert');
+        alerts.forEach(function (alert) {
+            let bsAlert = new bootstrap.Alert(alert);
+            bsAlert.close();
+        });
+    }, 3000);
+</script>
+
+{% endblock content %}

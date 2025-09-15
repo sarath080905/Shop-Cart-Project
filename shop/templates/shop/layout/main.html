@@ -1,0 +1,36 @@
+<!doctype html>
+{% load static %}
+
+<html lang="en">
+    
+    <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>{% block title %}
+        {% endblock title %}</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-papNM8f5jE8T+LgYhz8TzHfr9VamZmnbRVNuVOVF7ZFT1MxLkTkfR8pJxLD8Jc4nT85BQk5IvCJoGzPP0VZ4Tg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+    {% include 'shop/inc-include/navbar.html' %}
+    
+    {% block content %}
+    {% endblock content %}
+
+    {% block scripts %}
+    {% endblock scripts %}
+    
+    {% include 'shop/inc-include/footer.html' %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+        crossorigin="anonymous"></script>
+</body>
+</html>

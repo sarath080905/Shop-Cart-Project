@@ -1,0 +1,210 @@
+{% extends 'shop/layout/main.html' %}
+
+{% block title %}
+{{ product.name }} | Shop Cart
+{% endblock title %}
+
+{% block content %}
+<style>
+    /* ======== Product Details Page Styling ======== */
+
+    /* Breadcrumbs */
+    .breadcrumb {
+        background-color: transparent;
+        padding: 0;
+        margin-bottom: 1rem;
+    }
+
+    .breadcrumb a {
+        text-decoration: none;
+    }
+
+    .breadcrumb-item.active {
+        font-weight: 500;
+        color: #6c757d;
+    }
+
+    /* Section background */
+    section.bg-light {
+        border-radius: 10px;
+    }
+
+    /* Product Image */
+    .product-image {
+        max-height: 350px;
+        object-fit: contain;
+        border: 1px solid #dee2e6;
+        padding: 10px;
+        background: white;
+    }
+
+    /* Product Name */
+    .product-title {
+        font-weight: 600;
+        font-size: 1.5rem;
+    }
+
+    /* Price Styles */
+    .price-original {
+        text-decoration: line-through;
+        color: #888;
+    }
+
+    .price-offer {
+        color: #28a745;
+        font-weight: bold;
+    }
+
+    /* Buttons */
+    .btn-primary i,
+    .btn-danger i {
+        margin-right: 5px;
+    }
+
+    .pic-box {
+        position: relative;
+    }
+
+    .hot {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        background-color: #ff5733;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 0.9rem;
+        font-weight: bold;
+        z-index: auto;
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 768px) {
+        .product-image {
+            max-height: 250px;
+        }
+    }
+</style>
+<section class="bg-light py-4 my-5">
+    <div class="container">
+        <!-- ===================== 
+     PRODUCT DETAILS SECTION
+===================== -->
+        <section class="bg-light py-4 my-5">
+            <div class="container mw-600">
+                <!-- =====================
+             HEADER TITLE
+        ====================== -->
+                <div class="row">
+                    <div class="col-12">
+                        <!-- Product name heading -->
+                        <h4 class="mb-3">{{ product }} Details</h4>
+                        <!-- Separator line -->
+                        <hr style="border-color: #b8bfc2;">
+                    </div>
+
+                    <!-- =====================
+                 BREADCRUMBS NAVIGATION
+            ====================== -->
+                    <div class="col-12">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <!-- Home link -->
+                                <li class="breadcrumb-item">
+                                    <a href="{% url 'home' %}">Home</a>
+                                </li>
+                                <!-- Collections link -->
+                                <li class="breadcrumb-item">
+                                    <a href="{% url 'collections' %}">Collections</a>
+                                </li>
+                                <!-- Specific category link -->
+                                <li class="breadcrumb-item">
+                                    <a href="{% url 'collection_view' product.category.name %}">{{ product.category.name }}</a>
+                                </li>
+                                <!-- Current product name -->
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    {{ product }}
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- =====================
+             PRODUCT CONTENT (IMAGE + INFO)
+        ====================== -->
+                <div class="row align-items-center">
+
+                    <!-- PRODUCT IMAGE -->
+                    <div class="pic-box col-md-5 mb-3 text-center">
+                        {% if product.trending %}
+                        <div class="hot">Hot</div>
+                        {% endif %}
+                        <!-- Display product image -->
+                        <img src="{{ product.Product_image.url }}" class="img-fluid rounded shadow product-image"
+                            alt="{{ product.name }}">
+                    </div>
+
+                    <!-- PRODUCT INFORMATION -->
+                    <div class="col-md-7 mb-3">
+
+                        <!-- Product name -->
+                        <h5 class="text-success mb-3">{{ product.name|default:"Product" }}</h5>
+                        <!-- Additional title (could be seller name or repeated product name) -->
+                        <h5 class="text-success mb-3 product-title">{{ product.name|default:"Product" }}</h5>
+
+                        <!-- Product description -->
+                        <p>{{ product.description|default:"No description available." }}</p>
+
+                        <!-- Pricing section -->
+                        <h6 class="my-2">
+                            Current Price:
+                            <span class="price-original">Rs.{{ product.original_price }}</span>
+                        </h6>
+                        <h6 class="my-2">
+                            Offer Price:
+                            <span class="price-offer">Rs.{{ product.selling_price }}</span>
+                        </h6>
+
+                        <!-- Action buttons -->
+                        <div class="my-3">
+                            <!-- Add to cart button -->
+                            {% if product.quantity > 0 %}
+
+                            <!-- value -->
+                            <p>
+                            <div class="d-flex align-items-center mb-3">
+                                <button class="btn btn-secondary me-2">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                                <input type="text" name="qty " value="1" class="form-control text-center"
+                                    style="width: 60px;">
+                                <button class="btn btn-secondary me-2">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </div>
+                            </p>
+                            <button class="btn btn-primary me-2">
+                                <i class="fa fa-cart-plus"></i> Add to Cart
+                            </button>
+                            {% else %}
+                            <button class="btn btn-secondary me-2" disabled>
+                                <i class="fa fa-minus"></i> Out of Stock
+                            </button>
+                            {% endif %}
+                            <!-- Add to wishlist button -->
+                            <button class="btn btn-danger">
+                                <i class="fa fa-heart"></i>
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <script>
+                // value script
+        </script>
+
+        {% endblock %}

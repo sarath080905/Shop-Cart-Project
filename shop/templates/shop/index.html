@@ -1,0 +1,42 @@
+{% extends 'shop/layout/main.html' %}
+{% block title %}
+Shop cart | Shop all
+{% endblock title %}
+
+{% block content %}
+{% include 'shop/inc-include/slider.html' %}
+<section class="bg-light py-4 my-5">
+    <div class="container">
+        <div class="row">
+            {% for item in products %}
+                <div class="col-md-4 col-lg-3 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        {% if item.category and item.category.name %}
+                            <a href="{% url 'product_detail' item.category.name item.name %}">
+                                <img src="{{ item.Product_image.url }}" class="card-img-top" alt="{{ item.name }}">
+                            </a>
+                        {% else %}
+                            <img src="{{ item.Product_image.url }}" class="card-img-top" alt="{{ item.name }}">
+                        {% endif %}
+                        
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">{{ item.name }}</h5>
+                            <p class="card-text">{{ item.description|default:"No description available." }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                {% if item.original_price %}
+                                    <small class="text-muted text-decoration-line-through">₹{{ item.original_price }}</small>
+                                {% endif %}
+                                <span class="text-success fw-bold">₹{{ item.selling_price }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <p class="text-center">No products available.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock content %}
