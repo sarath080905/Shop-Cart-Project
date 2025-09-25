@@ -1,0 +1,57 @@
+<!-- Modern Loader -->
+<div id="loader" class="loader-overlay d-flex justify-content-center align-items-center">
+  <div class="spinner"></div>
+</div>
+
+<style>
+  /* Full-page overlay */
+  .loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(to right, #7e22ce, #ec4899, #ef4444);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+    transition: opacity 0.8s ease; /* Smooth fade-out */
+  }
+
+  /* Spinner styles */
+  .spinner {
+    width: 70px;
+    height: 70px;
+    border: 8px solid rgba(255,255,255,0.3);
+    border-top: 8px solid #ffffff;
+    border-radius: 50%;
+    animation: spin 1.2s linear infinite;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* Hidden state for fade out */
+  .loader-hide {
+    opacity: 0;
+    pointer-events: none; /* Allow clicking on page */
+  }
+</style>
+
+<script>
+  window.addEventListener('load', function() {
+    const loader = document.getElementById('loader');
+    if(loader) {
+      loader.classList.add('loader-hide'); // fade out
+      // Remove loader from DOM after transition
+      setTimeout(() => {
+        loader.remove();
+      }, 900); // matches transition duration
+    }
+  });
+</script>

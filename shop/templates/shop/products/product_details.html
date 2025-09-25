@@ -84,6 +84,26 @@
             max-height: 250px;
         }
     }
+
+    /* Feedback message styling */
+    .feedback-message {
+        margin-top: 10px;
+        padding: 10px;
+        border-radius: 5px;
+        display: inline-block;
+    }
+
+    .feedback-message.success {
+        color: #155724;
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+    }
+
+    .feedback-message.error {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+    }
 </style>
 <section class="bg-light py-4 my-5">
     <div class="container">
@@ -119,7 +139,8 @@
                                 </li>
                                 <!-- Specific category link -->
                                 <li class="breadcrumb-item">
-                                    <a href="{% url 'collection_view' product.category.name %}">{{ product.category.name }}</a>
+                                    <a href="{% url 'collection_view' product.category.name %}">{{ product.category.name
+                                        }}</a>
                                 </li>
                                 <!-- Current product name -->
                                 <li class="breadcrumb-item active" aria-current="page">
@@ -168,43 +189,124 @@
 
                         <!-- Action buttons -->
                         <div class="my-3">
-                            <!-- Add to cart button -->
                             {% if product.quantity > 0 %}
-
-                            <!-- value -->
-                            <p>
-                            <div class="d-flex align-items-center mb-3">
-                                <button class="btn btn-secondary me-2">
-                                    <i class="fa fa-minus"></i>
+                            <form id="addToCartForm" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" value="{{ product.id }}" name="product_id">
+                                <p>
+                                <div class="d-flex align-items-center mb-3">
+                                    <button type="button" id="minusBtn" class="btn btn-secondary me-2">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                    <input type="text" name="qty" id="qtyInput" value="1"
+                                        class="form-control text-center" style="width: 60px;">
+                                    <button type="button" id="plusBtn" class="btn btn-secondary me-2">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </div>
+                                </p>
+                                <button type="button" class="btn btn-primary me-2" id="addToCartBtn">
+                                    <i class="fa fa-cart-plus"></i> Add to Cart
                                 </button>
-                                <input type="text" name="qty " value="1" class="form-control text-center"
-                                    style="width: 60px;">
-                                <button class="btn btn-secondary me-2">
-                                    <i class="fa fa-plus"></i>
-                                </button>
-                            </div>
-                            </p>
-                            <button class="btn btn-primary me-2">
-                                <i class="fa fa-cart-plus"></i> Add to Cart
-                            </button>
+                            </form>
                             {% else %}
                             <button class="btn btn-secondary me-2" disabled>
                                 <i class="fa fa-minus"></i> Out of Stock
                             </button>
                             {% endif %}
-                            <!-- Add to wishlist button -->
                             <button class="btn btn-danger">
                                 <i class="fa fa-heart"></i>
                             </button>
+                            <div id="feedbackMessage" class="feedback-message"></div>
+                            <!-- Add a feedback message element -->
                         </div>
 
                     </div>
                 </div>
-            </div>
-        </section>
-
         <script>
-                // value script
-        </script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const addToCartBtn = document.getElementById("addToCartBtn");
+                const addToFavBtn = document.querySelector(".btn-danger");
+                const feedbackMessage = document.getElementById("feedbackMessage");
+                const qtyInput = document.getElementById("qtyInput");
 
-        {% endblock %}
+                function showFeedback(message, isSuccess) {
+                    feedbackMessage.textContent = message;
+                    feedbackMessage.className = `feedback-message ${isSuccess ? 'success' : 'error'}`;
+                    setTimeout(() => {
+                        feedbackMessage.textContent = "";
+                        feedbackMessage.className = "feedback-message";
+                    }, 3000);
+                }
+
+                function sendRequest(url, data, successCallback) {
+                    fetch(url, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRFToken": "{{ csrf_token }}"
+                        },
+                        body: JSON.stringify(data)
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'login_required') {
+                                window.location.href = "{% url 'login' %}";
+                            } else if (data.status === 'success') {
+                                successCallback(data);
+                            } else {
+                                showFeedback(data.message, false);
+                            }
+                        })
+                        .catch(error => {
+                            showFeedback("An error occurred. Please try again.", false);
+                        });
+                }
+
+                if (addToCartBtn) {
+                    addToCartBtn.addEventListener("click", function () {
+                        sendRequest("{% url 'add_to_cart' %}", {
+                            product_id: "{{ product.id }}",
+                            quantity: parseInt(qtyInput.value)
+                        }, data => {
+                            showFeedback(data.message, true);
+                        });
+                    });
+                }
+
+                if (addToFavBtn) {
+                    addToFavBtn.addEventListener("click", function () {
+                        sendRequest("{% url 'add_to_favorites' %}", {
+                            product_id: "{{ product.id }}"
+                        }, data => {
+                            showFeedback(data.message, true);
+                            addToFavBtn.innerHTML = '<i class="fa fa-heart"></i> Added to Favorites';
+                            addToFavBtn.disabled = true;
+                        });
+                    });
+                }
+
+                // Quantity controls
+                const minusBtn = document.getElementById("minusBtn");
+                const plusBtn = document.getElementById("plusBtn");
+
+                if (minusBtn && plusBtn) {
+                    minusBtn.addEventListener("click", function () {
+                        let currentQty = parseInt(qtyInput.value);
+                        if (currentQty > 1) {
+                            qtyInput.value = currentQty - 1;
+                        }
+                    });
+
+                    plusBtn.addEventListener("click", function () {
+                        let currentQty = parseInt(qtyInput.value);
+                        qtyInput.value = currentQty + 1;
+                    });
+                }
+            });
+        </script>
+    </div>
+</section>
+
+
+{% endblock %}

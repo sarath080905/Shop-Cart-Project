@@ -1,14 +1,7 @@
 from django.contrib import admin
-from .models import *
-from .models import Catagory
-from .models import Product
+from .models import Category, Product, Cart # Corrected import statement
 
 # Register your models here.
-# -------------------
-# class CategoryAdmin(admin.ModelAdmin):
-#     list_display =('name','image', 'discription')
-# admin.site.register(Catagory,CategoryAdmin)
-# -------------------
-
-admin.site.register(Catagory)
+admin.site.register(Category)
 admin.site.register(Product)
+admin.site.register(Cart)

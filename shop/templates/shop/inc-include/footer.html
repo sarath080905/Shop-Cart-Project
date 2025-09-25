@@ -1,14 +1,73 @@
-<footer class="bg-dark text-white py-4 mt-auto">
-  <div class="container text-center">
-    <p class="mb-1">&copy; {{ year|default:"2025" }} Shop Cart. All rights reserved.</p>
-    <ul class="list-inline mb-0">
+<footer class="custom-footer bg-gradient-to-r from-purple-600 via-pink-500 to-red-500 text-white py-4 shadow-lg">
+  <div class="container text-center d-flex flex-column flex-md-row justify-content-between align-items-center">
+    <!-- Brand / Copy -->
+    <p class="mb-2 mb-md-0 text-lg font-semibold tracking-wide">
+      &copy; {{ year|default:"2025" }} <span class="text-yellow-300">Shop Cart</span>. All rights reserved.
+    </p>
+
+    <!-- Social Links -->
+    <ul class="list-inline mb-0 d-flex gap-3 justify-content-center">
       <li class="list-inline-item">
-        <a href="#" class="text-white text-decoration-none"><i class="fa-brands fa-facebook-f"></i></a>
+        <a href="#" class="social-icon" style="background-color: black;"
+           onmouseover="this.style.backgroundColor='#1877f2';"
+           onmouseout="this.style.backgroundColor='black';" aria-label="Facebook">
+          <i class="fa-brands fa-facebook-f"></i>
+        </a>
       </li>
       <li class="list-inline-item">
-        <a href="#" class="text-white text-decoration-none"><i class="fa-brands fa-twitter"></i></a>
+        <a href="#" class="social-icon" style="background-color: black;"
+           onmouseover="this.style.backgroundColor='#1da1f2';"
+           onmouseout="this.style.backgroundColor='black';" aria-label="Twitter">
+          <i class="fa-brands fa-twitter"></i>
+        </a>
       </li>
       <li class="list-inline-item">
-        <a href="#" class="text-white text-decoration-none"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#" class="social-icon" style="background-color: black;"
+           onmouseover="this.style.backgroundColor='#e4405f';"
+           onmouseout="this.style.backgroundColor='black';" aria-label="Instagram">
+          <i class="fa-brands fa-instagram"></i>
+        </a>
       </li>
     </ul>
+  </div>
+</footer>
+
+<style>
+  .custom-footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 1030;
+  }
+
+  .container {
+    max-width: 1140px;
+    margin: 0 auto;
+  }
+
+  .social-icon {
+    color: white;
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+    font-size: 1.2rem;
+  }
+
+  .social-icon i {
+    vertical-align: middle;
+  }
+
+  /* Responsive for smaller screens */
+  @media (max-width: 576px) {
+    .custom-footer .container {
+      flex-direction: column;
+    }
+    .custom-footer p {
+      margin-bottom: 10px;
+    }
+  }
+</style>
