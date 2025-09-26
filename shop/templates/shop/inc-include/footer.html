@@ -1,30 +1,36 @@
-<footer class="custom-footer bg-gradient-to-r from-purple-600 via-pink-500 to-red-500 text-white py-4 shadow-lg">
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Tailwind (must be after Bootstrap) -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<footer class="bg-dark text-white py-4 shadow-lg">
   <div class="container text-center d-flex flex-column flex-md-row justify-content-between align-items-center">
     <!-- Brand / Copy -->
-    <p class="mb-2 mb-md-0 text-lg font-semibold tracking-wide">
-      &copy; {{ year|default:"2025" }} <span class="text-yellow-300">Shop Cart</span>. All rights reserved.
+    <p class="mb-2 mb-md-0 fw-semibold">
+      &copy; {{ year|default:"2025" }} <span class="text-warning">Shop Cart</span>. All rights reserved.
     </p>
 
     <!-- Social Links -->
     <ul class="list-inline mb-0 d-flex gap-3 justify-content-center">
       <li class="list-inline-item">
-        <a href="#" class="social-icon" style="background-color: black;"
+        <a href="#" class="social-icon"
            onmouseover="this.style.backgroundColor='#1877f2';"
-           onmouseout="this.style.backgroundColor='black';" aria-label="Facebook">
+           onmouseout="this.style.backgroundColor='#212529';" aria-label="Facebook">
           <i class="fa-brands fa-facebook-f"></i>
         </a>
       </li>
       <li class="list-inline-item">
-        <a href="#" class="social-icon" style="background-color: black;"
+        <a href="#" class="social-icon"
            onmouseover="this.style.backgroundColor='#1da1f2';"
-           onmouseout="this.style.backgroundColor='black';" aria-label="Twitter">
+           onmouseout="this.style.backgroundColor='#212529';" aria-label="Twitter">
           <i class="fa-brands fa-twitter"></i>
         </a>
       </li>
       <li class="list-inline-item">
-        <a href="#" class="social-icon" style="background-color: black;"
+        <a href="#" class="social-icon"
            onmouseover="this.style.backgroundColor='#e4405f';"
-           onmouseout="this.style.backgroundColor='black';" aria-label="Instagram">
+           onmouseout="this.style.backgroundColor='#212529';" aria-label="Instagram">
           <i class="fa-brands fa-instagram"></i>
         </a>
       </li>
@@ -40,12 +46,8 @@
     z-index: 1030;
   }
 
-  .container {
-    max-width: 1140px;
-    margin: 0 auto;
-  }
-
   .social-icon {
+    background-color: #212529; /* same as bg-dark */
     color: white;
     display: inline-block;
     width: 40px;
