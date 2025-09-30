@@ -1,311 +1,267 @@
 {% extends 'shop/layout/main.html' %}
-
 {% block title %}
 {{ product.name }} | Shop Cart
 {% endblock title %}
 
 {% block content %}
 <style>
-    /* ======== Product Details Page Styling ======== */
+/* ================== PRODUCT DETAILS PAGE STYLING ================== */
 
-    /* Breadcrumbs */
-    .breadcrumb {
-        background-color: transparent;
-        padding: 0;
-        margin-bottom: 1rem;
-    }
+/* Product Image Box */
+.pic-box {
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+    border: 2px solid #c8e6c9; /* soft mint border */
+    background: linear-gradient(135deg, #e8f5e9, #fffde7); /* fresh green → warm yellow */
+    box-shadow: 0 6px 18px rgba(56, 142, 60, 0.25); /* subtle green glow */
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+.pic-box:hover {
+    transform: scale(1.03);
+    box-shadow: 0 14px 28px rgba(255, 193, 7, 0.35); /* golden glow */
+}
+.pic-box img {
+    width: 100%;
+    height: 380px;
+    object-fit: cover;
+    border-radius: 14px;
+    transition: transform 0.4s ease-in-out;
+}
+.pic-box:hover img {
+    transform: scale(1.08);
+}
 
-    .breadcrumb a {
-        text-decoration: none;
-    }
+/* Badge */
+.hot {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: linear-gradient(45deg, #2e7d32, #66bb6a); /* rich green */
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
+}
 
-    .breadcrumb-item.active {
-        font-weight: 500;
-        color: #6c757d;
-    }
+/* Breadcrumb */
+.breadcrumb {
+    background-color: transparent;
+    padding: 0;
+}
+.breadcrumb a {
+    color: #388e3c; /* medium green links */
+    text-decoration: none;
+    font-weight: 500;
+}
+.breadcrumb a:hover {
+    color: #fbc02d; /* golden yellow on hover */
+}
+.breadcrumb .active {
+    color: #fbc02d; /* active golden */
+    font-weight: 600;
+}
 
-    /* Section background */
-    section.bg-light {
-        border-radius: 10px;
-    }
+/* Feedback messages */
+.feedback-message {
+    font-weight: 500;
+    margin-top: 10px;
+}
+.feedback-message.success {
+    color: #2e7d32;
+}
+.feedback-message.error {
+    color: #d32f2f;
+}
 
-    /* Product Image */
-    .product-image {
-        max-height: 350px;
-        object-fit: contain;
-        border: 1px solid #dee2e6;
-        padding: 10px;
-        background: white;
+/* Responsive */
+@media (max-width: 768px) {
+    .pic-box img {
+        height: 260px;
     }
+}
 
-    /* Product Name */
-    .product-title {
-        font-weight: 600;
-        font-size: 1.5rem;
-    }
-
-    /* Price Styles */
-    .price-original {
-        text-decoration: line-through;
-        color: #888;
-    }
-
-    .price-offer {
-        color: #28a745;
-        font-weight: bold;
-    }
-
-    /* Buttons */
-    .btn-primary i,
-    .btn-danger i {
-        margin-right: 5px;
-    }
-
-    .pic-box {
-        position: relative;
-    }
-
-    .hot {
-        position: absolute;
-        top: 0px;
-        left: 0px;
-        background-color: #ff5733;
-        color: white;
-        padding: 5px 10px;
-        border-radius: 5px;
-        font-size: 0.9rem;
-        font-weight: bold;
-        z-index: auto;
-    }
-
-    /* Mobile adjustments */
-    @media (max-width: 768px) {
-        .product-image {
-            max-height: 250px;
-        }
-    }
-
-    /* Feedback message styling */
-    .feedback-message {
-        margin-top: 10px;
-        padding: 10px;
-        border-radius: 5px;
-        display: inline-block;
-    }
-
-    .feedback-message.success {
-        color: #155724;
-        background-color: #d4edda;
-        border-color: #c3e6cb;
-    }
-
-    .feedback-message.error {
-        color: #721c24;
-        background-color: #f8d7da;
-        border-color: #f5c6cb;
-    }
 </style>
-<section class="bg-light py-4 my-5">
-    <div class="container">
-        <!-- ===================== 
-     PRODUCT DETAILS SECTION
-===================== -->
-        <section class="bg-light py-4 my-5">
-            <div class="container mw-600">
-                <!-- =====================
-             HEADER TITLE
-        ====================== -->
-                <div class="row">
-                    <div class="col-12">
-                        <!-- Product name heading -->
-                        <h4 class="mb-3">{{ product }} Details</h4>
-                        <!-- Separator line -->
-                        <hr style="border-color: #b8bfc2;">
-                    </div>
 
-                    <!-- =====================
-                 BREADCRUMBS NAVIGATION
-            ====================== -->
-                    <div class="col-12">
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb">
-                                <!-- Home link -->
-                                <li class="breadcrumb-item">
-                                    <a href="{% url 'home' %}">Home</a>
-                                </li>
-                                <!-- Collections link -->
-                                <li class="breadcrumb-item">
-                                    <a href="{% url 'collections' %}">Collections</a>
-                                </li>
-                                <!-- Specific category link -->
-                                <li class="breadcrumb-item">
-                                    <a href="{% url 'collection_view' product.category.name %}">{{ product.category.name}}</a>
-                                </li>
-                                <!-- Current product name -->
-                                <li class="breadcrumb-item active" aria-current="page">
-                                    {{ product }}
-                                </li>
-                            </ol>
-                        </nav>
-                    </div>
-                </div>
+<section class="my-5 py-5 w-100 h-100">
+  <div class="container">
 
-                <!-- =====================
-             PRODUCT CONTENT (IMAGE + INFO)
-        ====================== -->
-                <div class="row align-items-center">
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb" class="mb-4">
+  <ol class="breadcrumb hover-color-green fs-6">
+    <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'collections' %}">Collections</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'collection_view' product.category.name %}">{{ product.category.name }}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+  </ol>
+</nav>
+    <hr class="mb-2 color-success">
 
-                    <!-- PRODUCT IMAGE -->
-                    <div class="pic-box col-md-5 mb-3 text-center">
-                        {% if product.trending %}
-                        <div class="hot">Hot</div>
-                        {% endif %}
-                        <!-- Display product image -->
-                        <img src="{{ product.Product_image.url }}" class="img-fluid rounded shadow product-image"
-                            alt="{{ product.name }}">
-                    </div>
+    <!-- Product Card -->
+    <div class="row g-4 align-items-center">
 
-                    <!-- PRODUCT INFORMATION -->
-                    <div class="col-md-7 mb-3">
+      <!-- Product Image -->
+      <div class="col-md-5">
+        <div class="pic-box">
+          {% if product.trending %}
+          <span class="hot">Hot</span>
+          {% endif %}
+          <img src="{{ product.image_or_url }}" alt="{{ product.name }}">
+        </div>
+      </div>
 
-                        <!-- Product name -->
-                        <h5 class="text-success mb-3">{{ product.name|default:"Product" }}</h5>
-                        <!-- Additional title (could be seller name or repeated product name) -->
-                        <h5 class="text-success mb-3 product-title">{{ product.name|default:"Product" }}</h5>
+      <!-- Product Info -->
+      <div class="col-md-7">
+        <div class="card border-0 shadow-sm p-4 rounded-4">
+          <h2 class="fw-bold text-success mb-3">{{ product.name }}</h2>
+          <p class="text-muted mb-4">{{ product.description|default:"No description available." }}</p>
 
-                        <!-- Product description -->
-                        <p>{{ product.description|default:"No description available." }}</p>
+          <!-- Pricing -->
+          <div class="mb-4">
+            {% if product.original_price %}
+            <span class="text-decoration-line-through text-secondary fs-5 me-3">₹{{ product.original_price }}</span>
+            {% endif %}
+            <span class="text-warning fw-bold fs-3">₹{{ product.selling_price }}</span>
+          </div>
 
-                        <!-- Pricing section -->
-                        <h6 class="my-2">
-                            Current Price:
-                            <span class="price-original">Rs.{{ product.original_price }}</span>
-                        </h6>
-                        <h6 class="my-2">
-                            Offer Price:
-                            <span class="price-offer">Rs.{{ product.selling_price }}</span>
-                        </h6>
+          <!-- Quantity and Actions -->
+          {% if product.quantity > 0 %}
+          <form id="addToCartForm" method="post">
+            {% csrf_token %}
+            <input type="hidden" value="{{ product.id }}" name="product_id">
 
-                        <!-- Action buttons -->
-                        <div class="my-3">
-                            {% if product.quantity > 0 %}
-                            <form id="addToCartForm" method="post">
-                                {% csrf_token %}
-                                <input type="hidden" value="{{ product.id }}" name="product_id">
-                                <p>
-                                <div class="d-flex align-items-center mb-3">
-                                    <button type="button" id="minusBtn" class="btn btn-secondary me-2">
-                                        <i class="fa fa-minus"></i>
-                                    </button>
-                                    <input type="text" name="qty" id="qtyInput" value="1"
-                                        class="form-control text-center" style="width: 60px;">
-                                    <button type="button" id="plusBtn" class="btn btn-secondary me-2">
-                                        <i class="fa fa-plus"></i>
-                                    </button>
-                                </div>
-                                </p>
-                                <button type="button" class="btn btn-primary me-2" id="addToCartBtn">
-                                    <i class="fa fa-cart-plus"></i> Add to Cart
-                                </button>
-                            </form>
-                            {% else %}
-                            <button class="btn btn-secondary me-2" disabled>
-                                <i class="fa fa-minus"></i> Out of Stock
-                            </button>
-                            {% endif %}
-                            <button class="btn btn-danger">
-                                <i class="fa fa-heart"></i>
-                            </button>
-                            <div id="feedbackMessage" class="feedback-message"></div>
-                            <!-- Add a feedback message element -->
-                        </div>
+            <div class="d-flex align-items-center mb-3">
+              <button type="button" id="minusBtn" class="btn btn-outline-success btn-sm"><i class="fa fa-minus"></i></button>
+              <input type="text" name="qty" id="qtyInput" value="1" class="form-control text-center mx-2" style="width: 70px;">
+              <button type="button" id="plusBtn" class="btn btn-outline-success btn-sm"><i class="fa fa-plus"></i></button>
+            </div>
 
-                    </div>
-                </div>
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const addToCartBtn = document.getElementById("addToCartBtn");
-                const addToFavBtn = document.querySelector(".btn-danger");
-                const feedbackMessage = document.getElementById("feedbackMessage");
-                const qtyInput = document.getElementById("qtyInput");
+            <div class="d-flex gap-3">
+              <button type="button" id="addToCartBtn" class="btn btn-success btn-lg">
+                <i class="fa fa-cart-plus me-2"></i> Add to Cart
+              </button>
+              <button type="button" class="btn btn-warning btn-lg text-dark fw-bold">
+                <i class="fa fa-heart me-2"></i> Favorite
+              </button>
+            </div>
+          </form>
+          {% else %}
+          <button class="btn btn-secondary btn-lg" disabled>Out of Stock</button>
+          {% endif %}
 
-                function showFeedback(message, isSuccess) {
-                    feedbackMessage.textContent = message;
-                    feedbackMessage.className = `feedback-message ${isSuccess ? 'success' : 'error'}`;
-                    setTimeout(() => {
-                        feedbackMessage.textContent = "";
-                        feedbackMessage.className = "feedback-message";
-                    }, 3000);
-                }
-
-                function sendRequest(url, data, successCallback) {
-                    fetch(url, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "X-CSRFToken": "{{ csrf_token }}"
-                        },
-                        body: JSON.stringify(data)
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.status === 'login_required') {
-                                window.location.href = "{% url 'login' %}";
-                            } else if (data.status === 'success') {
-                                successCallback(data);
-                            } else {
-                                showFeedback(data.message, false);
-                            }
-                        })
-                        .catch(error => {
-                            showFeedback("An error occurred. Please try again.", false);
-                        });
-                }
-
-                if (addToCartBtn) {
-                    addToCartBtn.addEventListener("click", function () {
-                        sendRequest("{% url 'add_to_cart' %}", {
-                            product_id: "{{ product.id }}",
-                            quantity: parseInt(qtyInput.value)
-                        }, data => {
-                            showFeedback(data.message, true);
-                        });
-                    });
-                }
-
-                if (addToFavBtn) {
-                    addToFavBtn.addEventListener("click", function () {
-                        sendRequest("{% url 'add_to_favorites' %}", {
-                            product_id: "{{ product.id }}"
-                        }, data => {
-                            showFeedback(data.message, true);
-                            addToFavBtn.innerHTML = '<i class="fa fa-heart"></i> Added to Favorites';
-                            addToFavBtn.disabled = true;
-                        });
-                    });
-                }
-
-                // Quantity controls
-                const minusBtn = document.getElementById("minusBtn");
-                const plusBtn = document.getElementById("plusBtn");
-
-                if (minusBtn && plusBtn) {
-                    minusBtn.addEventListener("click", function () {
-                        let currentQty = parseInt(qtyInput.value);
-                        if (currentQty > 1) {
-                            qtyInput.value = currentQty - 1;
-                        }
-                    });
-
-                    plusBtn.addEventListener("click", function () {
-                        let currentQty = parseInt(qtyInput.value);
-                        qtyInput.value = currentQty + 1;
-                    });
-                }
-            });
-        </script>
+          <!-- Feedback -->
+          <div id="feedbackMessage" class="mt-3"></div>
+        </div>
+      </div>
     </div>
+  </div>
 </section>
 
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const addToCartBtn = document.getElementById("addToCartBtn");
+    const addToFavBtn = document.querySelector(".btn-warning");
+    const feedbackMessage = document.getElementById("feedbackMessage");
+    const qtyInput = document.getElementById("qtyInput");
+
+    // ===== Feedback handler =====
+    function showFeedback(message, isSuccess) {
+        feedbackMessage.textContent = message;
+        feedbackMessage.className = `feedback-message ${isSuccess ? 'success' : 'error'}`;
+        setTimeout(() => {
+            feedbackMessage.textContent = "";
+            feedbackMessage.className = "feedback-message";
+        }, 3000);
+    }
+
+    // ===== Get CSRF token =====
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+            const cookies = document.cookie.split(";");
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + "=")) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // ===== Send Request =====
+    function sendRequest(url, data, successCallback) {
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie("csrftoken"),
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === "login_required") {
+                window.location.href = "{% url 'login' %}";
+            } else if (data.status === "success") {
+                successCallback(data);
+            } else {
+                showFeedback(data.message || "Something went wrong.", false);
+            }
+        })
+        .catch(() => {
+            showFeedback("An error occurred. Please try again.", false);
+        });
+    }
+
+    // ===== Add to Cart =====
+    if (addToCartBtn) {
+        addToCartBtn.addEventListener("click", function () {
+            let quantity = parseInt(qtyInput.value);
+            if (isNaN(quantity) || quantity < 1) {
+                quantity = 1; // fallback to 1
+            }
+
+            sendRequest("{% url 'add_to_cart' %}", {
+                product_id: "{{ product.id }}",
+                quantity: quantity
+            }, data => {
+                showFeedback(data.message, true);
+            });
+        });
+    }
+
+    // ===== Add to Favorites =====
+    if (addToFavBtn) {
+        addToFavBtn.addEventListener("click", function () {
+            sendRequest("{% url 'add_to_favorites' %}", {
+                product_id: "{{ product.id }}"
+            }, data => {
+                showFeedback(data.message, true);
+                addToFavBtn.innerHTML = '<i class="fa fa-heart"></i> Added';
+                addToFavBtn.disabled = true;
+            });
+        });
+    }
+
+    // ===== Quantity Buttons =====
+    const minusBtn = document.getElementById("minusBtn");
+    const plusBtn = document.getElementById("plusBtn");
+
+    if (minusBtn && plusBtn && qtyInput) {
+        minusBtn.addEventListener("click", () => {
+            let currentQty = parseInt(qtyInput.value) || 1;
+            if (currentQty > 1) qtyInput.value = currentQty - 1;
+        });
+        plusBtn.addEventListener("click", () => {
+            let currentQty = parseInt(qtyInput.value) || 1;
+            qtyInput.value = currentQty + 1;
+        });
+    }
+});
+</script>
 
 {% endblock %}
