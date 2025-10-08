@@ -3,16 +3,18 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from .models import Cart, Category, Product, Favorite   # Corrected model name
+from .models import Cart, Category, Product, Favorite  # Corrected model name
 from shop.form import CustomUserForm
 from django.contrib.auth.decorators import login_required
 from django import template
 
 register = template.Library()
 
+
 @register.filter(name='multiply')
 def multiply(value, arg):
     return value * arg
+
 
 # ============================
 # HOME PAGE
@@ -47,6 +49,7 @@ def login_page(request):
 
 
 def logout_page(request):
+    """Logout the current user"""
     if request.user.is_authenticated:
         logout(request)
         messages.success(request, "You have been logged out.")
@@ -73,15 +76,16 @@ def register(request):
 # ============================
 def collection(request):
     """Show all active categories."""
-    categories = Category.objects.filter(status=False)  # Corrected model name
+    categories = Category.objects.filter(status=False)
     return render(request, "shop/collection.html", {"categories": categories})
+
 
 # ============================
 # PRODUCTS BY CATEGORY
 # ============================
 def collectionviews(request, category_name):
     """Show all products in a specific category."""
-    category = Category.objects.filter(name__iexact=category_name, status=False).first()  # Corrected model name
+    category = Category.objects.filter(name__iexact=category_name, status=False).first()
     if category:
         products = Product.objects.filter(category=category, status=False)
         return render(request, "shop/products/index.html", {
@@ -90,23 +94,25 @@ def collectionviews(request, category_name):
         })
     else:
         messages.warning(request, "No Such Category Found")
-        return redirect('collections')  # This matches urls.py
+        return redirect('collections')
+
 
 def products_details(request, category_name, product_name):
+    """Show a specific product in a category"""
     category = get_object_or_404(Category, name=category_name)
-    # Get the first matching product instead of requiring a unique match
     product = Product.objects.filter(
-        category=category, 
+        category=category,
         name=product_name,
-        status=False  # Only get active products
+        status=False
     ).first()
-    
+
     if not product:
         messages.warning(request, "Product not found")
         return redirect('collections')
-        
+
     context = {'product': product}
     return render(request, 'shop/products/product_details.html', context)
+
 
 # ============================
 # CART
@@ -185,7 +191,7 @@ def add_to_favorites(request):
             product_id = data.get('product_id')
 
             product = get_object_or_404(Product, id=product_id)
-            favorite, created = Favorite.objects.get_or_create(
+            Favorite.objects.get_or_create(
                 user=request.user,
                 product=product
             )
@@ -238,8 +244,10 @@ def favorites(request):
         'favorite_products': favorite_products
     })
 
+
 @login_required
 def remove_from_favorite(request, fav_id):
+    """Remove an item from favorites (view version)"""
     try:
         if request.method == 'POST':
             favorite = Favorite.objects.get(id=fav_id, user=request.user)
@@ -247,5 +255,5 @@ def remove_from_favorite(request, fav_id):
             messages.success(request, "Item removed from favorites")
     except Favorite.DoesNotExist:
         messages.error(request, "Item not found in favorites")
-    
+
     return redirect('favorites')
